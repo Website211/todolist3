@@ -37,9 +37,14 @@ document.addEventListener("DOMContentLoaded", () => {
       // Handle delete
       const deleteBtn = li.querySelector(".delete-btn");
       deleteBtn.addEventListener("click", () => {
-        tasks.splice(index, 1);
-        saveTasks();
-        renderTasks();
+        const listItem = deleteBtn.parentElement;
+        listItem.classList.add("removing");
+
+        setTimeout(() => {
+          tasks.splice(index, 1);
+          saveTasks();
+          renderTasks();
+        }, 300);
       });
 
       taskList.appendChild(li);
@@ -67,4 +72,34 @@ document.addEventListener("DOMContentLoaded", () => {
 
   // Initial render
   renderTasks();
+
+  // Add this at the beginning of your script.js file
+  const themeToggle = document.getElementById("themeToggle");
+  const themeIcon = themeToggle.querySelector("i");
+
+  // Check for saved theme preference
+  const savedTheme = localStorage.getItem("theme");
+  if (savedTheme) {
+    document.documentElement.setAttribute("data-theme", savedTheme);
+    updateThemeIcon(savedTheme);
+  }
+
+  themeToggle.addEventListener("click", () => {
+    const currentTheme = document.documentElement.getAttribute("data-theme");
+    const newTheme = currentTheme === "dark" ? "light" : "dark";
+
+    document.documentElement.setAttribute("data-theme", newTheme);
+    localStorage.setItem("theme", newTheme);
+    updateThemeIcon(newTheme);
+  });
+
+  function updateThemeIcon(theme) {
+    if (theme === "dark") {
+      themeIcon.classList.remove("fa-moon");
+      themeIcon.classList.add("fa-sun");
+    } else {
+      themeIcon.classList.remove("fa-sun");
+      themeIcon.classList.add("fa-moon");
+    }
+  }
 });
